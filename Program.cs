@@ -18,10 +18,14 @@ class Program
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                const string sql = @"EXEC('CREATE DATABASE [NewDatabase]');";
+                const string sql = @"
+                    IF DB_ID('NewDatabase') IS NULL
+                    BEGIN
+                        CREATE DATABASE [NewDatabase];
+                    END";
 
                 using var cmd = new SqlCommand(sql, conn);
-                cmd.ExecuteNonQuery();  
+                cmd.ExecuteNonQuery();
 
                 Console.WriteLine($"Database Created!.");
             }
